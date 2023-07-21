@@ -8,7 +8,7 @@
     "start": "tsc && node dist/app.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\"",
     "lint": "eslint . --ext .ts",
-    "prettier": "prettier --write --config .prettierrc ./src/**/*.ts "
+    "prettier:format": "prettier --write --config .prettierrc ./src/**/*.ts "
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
@@ -29,5 +30,11 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "express": "^4.18.2"
+  },
+  "lint-staged": {
+    "./src/**/*.{ts}": [
+      "npm run prettier:format",
+      "npm run lint"
+    ]
   }
 }
