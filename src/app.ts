@@ -1,7 +1,8 @@
-import express, { Response, Request, NextFunction } from 'express';
-import { SERVER_PORT } from './config/config';
+import express from 'express';
+import { SERVER_PORT } from './config/app.config';
 import logger from 'morgan';
-import { HttpError } from 'http-errors';
+import { errorHandler } from './middlewares/error-handler.middleware';
+import { router as tasksRouter } from './routes/tasks.routes';
 
 const app = express();
 
@@ -10,17 +11,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
+app.use('/tasks', tasksRouter);
 
-app.get('/', (req: Request, res: Response): void => {
-  res.json({
-    message: 'Hello World',
-  });
-});
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction): void => {
-  res.status(500).send('Something broke!');
-});
+// Error handler
+app.use(errorHandler);
 
 app.set('port', SERVER_PORT);
 
