@@ -40,7 +40,7 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.put('/:taskId', async (req: Request, res: Response) => {
   try {
-    const taskId = Number(req.params.taskId);
+    const taskId = req.params.taskId;
     const { title, description, status } = req.body;
 
     if (!taskId || !title || !description || !status)
@@ -64,7 +64,7 @@ router.put('/:taskId', async (req: Request, res: Response) => {
 
 router.delete('/:taskId', async (req: Request, res: Response) => {
   try {
-    const taskId = Number(req.params.taskId);
+    const taskId = req.params.taskId;
 
     if (!taskId) return res.status(400).json({ message: 'Invalid task id' });
 
