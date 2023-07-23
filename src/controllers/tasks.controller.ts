@@ -1,50 +1,103 @@
-import { Task, TaskTemplate } from '../models/task.interface';
+import { Request, Response } from 'express';
 import { TaskModel } from '../models/task.model';
+import { validateStatus } from '../utils/validate-task-status.util';
 
-export async function getTasks(): Promise<Task[]> {
+export async function getTasks(req: Request, res: Response): Promise<void | Response> {
   try {
-    return await TaskModel.getTasks();
+    const tasks = await TaskModel.getTasks();
+    res.json(tasks);
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
-
-    throw new Error('There is a problem to get tasks');
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    }
+    res.status(500).json({ message: 'Something went wrong!' });
   }
 }
 
-export async function createTask(task: TaskTemplate): Promise<Task> {
+export async function createTask(req: Request, res: Response): Promise<void | Response> {
   try {
-    return await TaskModel.createTask(task);
-  } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
+    const { title, description, status } = req.body;
 
-    throw new Error('There is a problem to create a task');
+    if (!title || !description || !status) {
+      return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    if (!validateStatus(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const task = await TaskModel.createTask({ title, description, status });
+
+    res.json({
+      message: 'Task created',
+      task,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    }
+    res.status(500).json({ message: 'Something went wrong!' });
   }
 }
 
-export async function updateTask(taskId: string, task: TaskTemplate): Promise<Task> {
+export async function updateTask(req: Request, res: Response): Promise<void | Response> {
   try {
+    const taskId = req.params.taskId;
+    const { title, description, status } = req.body;
+
+    if (!taskId || !title || !description || !status) {
+      return res.status(400).json({ message: 'Missing fields' });
+    }
+
+    if (!validateStatus(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
     const taskExists = await TaskModel.taskExists(taskId);
 
-    if (!taskExists) throw new Error('Task not found');
+    if (!taskExists) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
 
-    return await TaskModel.updateTask(taskId, task);
+    const task = await TaskModel.updateTask(taskId, { title, description, status });
+
+    res.json({
+      message: 'Task updated',
+      task,
+    });
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
+    if (error instanceof Error) return res.status(500).json({ message: error.message });
 
-    throw new Error('There is a problem to update a task');
+    res.status(500).json({ message: 'Something went wrong!' });
   }
 }
 
-export async function deleteTask(taskId: string): Promise<boolean> {
+export async function deleteTask(req: Request, res: Response): Promise<void | Response> {
   try {
+    const taskId = req.params.taskId;
+
+    if (!taskId) {
+      return res.status(400).json({ message: 'Invalid task id' });
+    }
+
     const taskExists = await TaskModel.taskExists(taskId);
 
-    if (!taskExists) throw new Error('Task not found');
+    if (!taskExists) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
 
-    return await TaskModel.deleteTask(taskId);
+    const taskDeleted = await TaskModel.deleteTask(taskId);
+
+    if (!taskDeleted) {
+      throw new Error();
+    }
+
+    res.json({
+      message: 'Task deleted',
+    });
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
+    if (error instanceof Error) return res.status(500).json({ message: error.message });
 
-    throw new Error('There is a problem to delet a task');
+    res.status(500).json({ message: 'Something went wrong!' });
   }
 }
