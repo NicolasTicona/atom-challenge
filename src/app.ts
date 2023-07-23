@@ -3,7 +3,6 @@ import { SERVER_PORT } from './config/app.config';
 import logger from 'morgan';
 import { errorHandler } from './middlewares/error-handler.middleware';
 import { router as tasksRouter } from './routes/tasks.routes';
-import './config/firebase';
 
 const app = express();
 
