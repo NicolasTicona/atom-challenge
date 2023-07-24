@@ -8,7 +8,8 @@
     "start": "node dist/app.js",
     "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/app.js\"",
     "lint": "eslint . --ext .ts",
-    "prettier:format": "prettier --write --config .prettierrc ./src/**/*.ts "
+    "prettier:format": "prettier --write --config .prettierrc ./src/**/*.ts ",
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +32,7 @@
     "lint-staged": "^13.2.3",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
+    "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
   },
