@@ -4,7 +4,15 @@
 Solution for Code Challenge with Typescript and Firebase.
   
 ## Deployed App Link
-- INSERT_LINK_HERE
+- https://atom-challenge-api.onrender.com
+
+### API
+- GET /tasks
+- POST /tasks
+  - Body: title (string), description (string), status (string='pending'|'completed')
+- UPDATE /tasks/:taskId
+  - Body: title (string), description (string), status (string='pending'|'completed')
+- DELETE /tasks/:taskId
 
 ## How to run ?
 Run the following:
