@@ -21,7 +21,7 @@ describe('Task Controller', () => {
 
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
-          getTasks: jest.fn().mockResolvedValue(Promise.resolve(mockTask)),
+          getTasks: () => Promise.resolve(mockTask),
         };
       });
 
@@ -67,7 +67,7 @@ describe('Task Controller', () => {
 
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
-          createTask: jest.fn().mockResolvedValue(Promise.resolve(mockTask[0])),
+          createTask: () => Promise.resolve(mockTask[0]),
         };
       });
 
@@ -165,8 +165,8 @@ describe('Task Controller', () => {
 
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
-          updateTask: jest.fn().mockResolvedValue(Promise.resolve(mockTask[0])),
-          taskExists: jest.fn().mockResolvedValue(Promise.resolve(true)),
+          updateTask: () => Promise.resolve(mockTask[0]),
+          taskExists: () => Promise.resolve(true),
         };
       });
       const mockInstanceTaskModel = new mockTaskModel();
@@ -197,8 +197,8 @@ describe('Task Controller', () => {
 
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
-          updateTask: jest.fn(),
-          taskExists: jest.fn().mockResolvedValue(Promise.resolve(false)),
+          updateTask: () => {},
+          taskExists: () => Promise.resolve(false),
         };
       });
       const mockInstanceTaskModel = new mockTaskModel();
@@ -293,8 +293,8 @@ describe('Task Controller', () => {
 
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
-          deleteTask: jest.fn().mockResolvedValue(Promise.resolve(true)),
-          taskExists: jest.fn().mockResolvedValue(Promise.resolve(true)),
+          deleteTask: () => Promise.resolve(true),
+          taskExists: () => Promise.resolve(true),
         };
       });
       const mockInstanceTaskModel = new mockTaskModel();
@@ -343,7 +343,7 @@ describe('Task Controller', () => {
 
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
-          taskExists: jest.fn().mockResolvedValue(Promise.resolve(false)),
+          taskExists: () => Promise.resolve(false),
         };
       });
 
@@ -372,7 +372,7 @@ describe('Task Controller', () => {
       const mockTaskModel = jest.fn().mockImplementation(() => {
         return {
           deleteTask: jest.fn().mockRejectedValue(new Error()),
-          taskExist: jest.fn().mockResolvedValue(Promise.resolve(true)),
+          taskExist: () => Promise.resolve(true),
         };
       });
 
