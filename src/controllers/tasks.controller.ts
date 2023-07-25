@@ -11,7 +11,6 @@ export class TasksController {
 
   getTasks = async (req: Request, res: Response): Promise<void | Response> => {
     try {
-      console.log('hola', this);
       const tasks = await this._taskModel.getTasks();
       res.json(tasks);
     } catch (error) {
@@ -74,6 +73,7 @@ export class TasksController {
         task,
       });
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) return res.status(500).json({ message: error.message });
 
       res.status(500).json({ message: 'Something went wrong!' });
@@ -94,11 +94,7 @@ export class TasksController {
         return res.status(404).json({ message: 'Task not found' });
       }
 
-      const taskDeleted = await this._taskModel.deleteTask(taskId);
-
-      if (!taskDeleted) {
-        throw new Error();
-      }
+      await this._taskModel.deleteTask(taskId);
 
       res.json({
         message: 'Task deleted',
