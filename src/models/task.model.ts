@@ -1,12 +1,20 @@
 import { db } from '../config/firebase';
 import { Task, TaskTemplate } from './task.interface';
 
-const taskCollection = db.collection('tasks');
+export const TASK_COLLECTION_REF = db.collection('tasks');
 
-export abstract class TaskModel {
-  static async getTasks(): Promise<Task[]> {
+export class TaskModel {
+  private _taskCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>;
+
+  constructor(
+    taskCollection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
+  ) {
+    this._taskCollection = taskCollection;
+  }
+
+  async getTasks(): Promise<Task[]> {
     try {
-      const tasksSnapshot = await taskCollection.get();
+      const tasksSnapshot = await this._taskCollection.get();
 
       const tasks = tasksSnapshot.docs.map((doc): Task => {
         return { id: doc.id, ...doc.data() } as Task;
@@ -18,9 +26,9 @@ export abstract class TaskModel {
     }
   }
 
-  static async createTask(task: TaskTemplate): Promise<Task> {
+  async createTask(task: TaskTemplate): Promise<Task> {
     try {
-      const taskRef = await taskCollection.add(task);
+      const taskRef = await this._taskCollection.add(task);
 
       const taskSnapshot = await taskRef.get();
 
@@ -30,11 +38,11 @@ export abstract class TaskModel {
     }
   }
 
-  static async updateTask(taskId: string, task: TaskTemplate): Promise<Task> {
+  async updateTask(taskId: string, task: TaskTemplate): Promise<Task> {
     try {
-      await taskCollection.doc(taskId).set(task);
+      await this._taskCollection.doc(taskId).set(task);
 
-      const taskSnapshot = await taskCollection.doc(taskId).get();
+      const taskSnapshot = await this._taskCollection.doc(taskId).get();
 
       return Promise.resolve({ id: taskSnapshot.id, ...taskSnapshot.data() } as Task);
     } catch (error) {
@@ -42,9 +50,9 @@ export abstract class TaskModel {
     }
   }
 
-  static async deleteTask(taskId: string): Promise<boolean> {
+  async deleteTask(taskId: string): Promise<boolean> {
     try {
-      await taskCollection.doc(taskId).delete();
+      await this._taskCollection.doc(taskId).delete();
 
       return Promise.resolve(true);
     } catch {
@@ -52,9 +60,9 @@ export abstract class TaskModel {
     }
   }
 
-  static async taskExists(taskId: string): Promise<boolean> {
+  async taskExists(taskId: string): Promise<boolean> {
     try {
-      const taskRef = taskCollection.doc(taskId);
+      const taskRef = this._taskCollection.doc(taskId);
 
       const taskSnapshot = await taskRef.get();
 
