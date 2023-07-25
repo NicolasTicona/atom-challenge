@@ -8,5 +8,5 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ): void => {
-  res.status(500).send('Something broke!');
+  res.status(500).send('Page not found');
 };
