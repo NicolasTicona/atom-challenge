@@ -3,7 +3,7 @@
 
 Solution for Code Challenge with Typescript and Firebase.
   
-## Deployed App Link
+## Deployed API Link
 - https://atom-challenge-api.onrender.com
 
 ### API
