@@ -73,7 +73,6 @@ export class TasksController {
         task,
       });
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) return res.status(500).json({ message: error.message });
 
       res.status(500).json({ message: 'Something went wrong!' });

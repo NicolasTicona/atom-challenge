@@ -9,7 +9,8 @@
     "dev": "concurrently \"tsc --watch\" \"nodemon -q dist/app.js\"",
     "lint": "eslint . --ext .ts",
     "prettier:format": "prettier --write --config .prettierrc ./src/**/*.ts ",
-    "test": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
