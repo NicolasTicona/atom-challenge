@@ -9,8 +9,9 @@ export class TasksController {
     this._taskModel = taskModel;
   }
 
-  async getTasks(req: Request, res: Response): Promise<void | Response> {
+  getTasks = async (req: Request, res: Response): Promise<void | Response> => {
     try {
+      console.log('hola', this);
       const tasks = await this._taskModel.getTasks();
       res.json(tasks);
     } catch (error) {
@@ -19,9 +20,9 @@ export class TasksController {
       }
       res.status(500).json({ message: 'Something went wrong!' });
     }
-  }
+  };
 
-  async createTask(req: Request, res: Response): Promise<void | Response> {
+  createTask = async (req: Request, res: Response): Promise<void | Response> => {
     try {
       const { title, description, status } = req.body;
 
@@ -33,7 +34,7 @@ export class TasksController {
         return res.status(400).json({ message: 'Invalid status' });
       }
 
-      const task = this._taskModel.createTask({ title, description, status });
+      const task = await this._taskModel.createTask({ title, description, status });
 
       res.json({
         message: 'Task created',
@@ -45,9 +46,9 @@ export class TasksController {
       }
       res.status(500).json({ message: 'Something went wrong!' });
     }
-  }
+  };
 
-  async updateTask(req: Request, res: Response): Promise<void | Response> {
+  updateTask = async (req: Request, res: Response): Promise<void | Response> => {
     try {
       const taskId = req.params.taskId;
       const { title, description, status } = req.body;
@@ -60,13 +61,13 @@ export class TasksController {
         return res.status(400).json({ message: 'Invalid status' });
       }
 
-      const taskExists = this._taskModel.taskExists(taskId);
+      const taskExists = await this._taskModel.taskExists(taskId);
 
       if (!taskExists) {
         return res.status(404).json({ message: 'Task not found' });
       }
 
-      const task = this._taskModel.updateTask(taskId, { title, description, status });
+      const task = await this._taskModel.updateTask(taskId, { title, description, status });
 
       res.json({
         message: 'Task updated',
@@ -77,9 +78,9 @@ export class TasksController {
 
       res.status(500).json({ message: 'Something went wrong!' });
     }
-  }
+  };
 
-  async deleteTask(req: Request, res: Response): Promise<void | Response> {
+  deleteTask = async (req: Request, res: Response): Promise<void | Response> => {
     try {
       const taskId = req.params.taskId;
 
@@ -87,13 +88,13 @@ export class TasksController {
         return res.status(400).json({ message: 'Invalid task id' });
       }
 
-      const taskExists = this._taskModel.taskExists(taskId);
+      const taskExists = await this._taskModel.taskExists(taskId);
 
       if (!taskExists) {
         return res.status(404).json({ message: 'Task not found' });
       }
 
-      const taskDeleted = this._taskModel.deleteTask(taskId);
+      const taskDeleted = await this._taskModel.deleteTask(taskId);
 
       if (!taskDeleted) {
         throw new Error();
@@ -107,5 +108,5 @@ export class TasksController {
 
       res.status(500).json({ message: 'Something went wrong!' });
     }
-  }
+  };
 }

@@ -32,6 +32,8 @@ export class TaskModel {
 
       const taskSnapshot = await taskRef.get();
 
+      console.log(taskSnapshot.data());
+
       return Promise.resolve({ id: taskSnapshot.id, ...taskSnapshot.data() } as Task);
     } catch {
       return Promise.reject();
